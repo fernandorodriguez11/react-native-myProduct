@@ -1,10 +1,11 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable quotes */
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const baseURL = 'http://192.168.1.171:4000/api/productos';
-
+const baseURL = 'https://my-productos.herokuapp.com/api/productos';
+//const baseURL = 'http://192.168.1.171:4000/api/productos';
 const myProductsApi = axios.create({baseURL});
 
 /**Para cuando utilice el token
