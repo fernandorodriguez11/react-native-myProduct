@@ -7,7 +7,7 @@
 import React, { useContext, useState } from 'react';
 import { View, Text, StyleSheet, Button, Image, ScrollView } from 'react-native';
 import useForm from '../hooks/useForm';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {ImagePickerResponse, launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {Picker} from '@react-native-picker/picker';
 import { ProductsContext } from '../context/Productos/ProductsContext';
 import { ProductoInsert } from '../interfaces/interface-producto';
@@ -25,6 +25,7 @@ const InsertProduct = () => {
   const {ubicaciones, tipos, insertarProductos} = useContext(ProductsContext);
   //Para guardar la direccion de la foto temporal
   const [imagen, setImagen] = useState<string>('');
+  const [imagenIma, setImagenIma] = useState<ImagePickerResponse>({});
 
   const takePhoto = () => {
 
@@ -39,7 +40,7 @@ const InsertProduct = () => {
       if (resp.assets !== undefined){
         if (!resp.assets[0].uri) return;
         setImagen(resp.assets[0].uri);
-        //uploadImage(resp, _id);
+        setImagenIma(resp);
 
       }
       
@@ -59,7 +60,7 @@ const InsertProduct = () => {
         if (!resp.assets[0].uri) return;
 
         setImagen(resp.assets[0].uri);
-        //uploadImage(resp, _id);
+        setImagenIma(resp);
 
       }
       
@@ -80,8 +81,8 @@ const InsertProduct = () => {
         imagen,
       }
   
-      insertarProductos(producto);
-      console.log(producto);
+      insertarProductos(producto, imagenIma);
+
     }
     
   }

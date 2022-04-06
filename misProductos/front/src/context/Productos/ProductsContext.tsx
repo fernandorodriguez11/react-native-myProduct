@@ -1,7 +1,9 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable semi */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { createContext, useEffect, useReducer, useState } from 'react';
+import { ImagePickerResponse } from 'react-native-image-picker';
 import myProductsApi from '../../api/db';
 import { Producto, Ubicacion, TipoProducto, UbicacionesTot, TiposTot, ProductoInsert, Cesta, Mensaje, Pedidos, ProductosEn } from '../../interfaces/interface-producto';
 
@@ -15,7 +17,7 @@ type ProductContextProps = {
     todos: Producto[] | null,
     obtenerCategorias: () => void,
     obtenerTipos: () => void,
-    insertarProductos: (producto: ProductoInsert) => void,
+    insertarProductos: (producto: ProductoInsert, imagenIma: ImagePickerResponse) => void,
     insertarPedido: (pedido: Cesta) => void,
     obtenerCesta: () => void,
     obtenerTodosProductos: () => void,
@@ -66,8 +68,27 @@ export const ProductProvider = ( {children}: any ) => {
         ]);
     }
 
-    const insertarProductos = async (producto: ProductoInsert) => {
-        await myProductsApi.post<ProductoInsert>('/insertar-productos', producto);
+    const insertarProductos = async (producto: ProductoInsert, imagenIma: ImagePickerResponse) => {
+        
+        const respuesta = await myProductsApi.post<Mensaje>('/insertar-productos', producto);
+
+        if (respuesta.data.valido){
+            const id = respuesta.data.producto?._id;
+            if (imagenIma.assets !== undefined){
+
+                /*const fileToUpload = {
+                    uri: imagenIma.assets[0].uri,
+                    type: imagenIma.assets[0].type,
+                    name: imagenIma.assets[0].fileName,
+                }*/
+                /*
+                const formData = new FormData();
+                formData.append('archivo', fileToUpload);
+                */
+                const resp = await myProductsApi.put(`/subirImagen/${id}`, {archivo: producto.imagen});
+
+            }
+        }
     }
 
     const insertarPedido = async (pedido: Cesta) => {

@@ -4,7 +4,7 @@
 import { MaterialBottomTabScreenProps } from '@react-navigation/material-bottom-tabs';
 import SplashScreen from 'react-native-splash-screen';
 import React, { useContext, useEffect, useState } from 'react';
-import { View, FlatList, RefreshControl, Text, StyleSheet, Button } from 'react-native';
+import { View, FlatList, RefreshControl, Text, StyleSheet, Button, ScrollView } from 'react-native';
 import ProductoCesta from '../components/ProductoCesta';
 import { ProductsContext } from '../context/Productos/ProductsContext';
 
@@ -29,14 +29,17 @@ const Cesta = ({navigation}: Props) => {
   return (
     <View style={{flex: 1}}>
       { cesta?.length === 0
-        ? <View style={estilos.contenedorVacio} >
+        ? <ScrollView
+            style={estilos.contenedorVacio}
+            refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={pullToRefresh} />}
+          >
             <Text style={estilos.titulo} >No hay productos añadidos a la cesta.</Text>
             <Text style={estilos.mensaje} >Espera a que otro usuario añada un producto o añadelo tú mismo.</Text>
 
             <View style={estilos.capaBoton} >
               <Button title="Insertar" onPress={() => navigation.navigate('Productos')}/>
             </View>
-        </View>
+        </ScrollView>
         : <FlatList
             style={{backgroundColor: 'white'}}
             data={cesta}

@@ -6,7 +6,12 @@ const cors = require('cors');
 require('dotenv').config({path: '.env'});
 const app = express();
 const PORT = process.env.PORT;
-     
+
+const cloudinary = require('cloudinary').v2;
+cloudinary.config(process.env.CLOUDINARY_URL);
+const mv = require('mv');
+const {v4: uuidv4} = require('uuid');
+
 /**Schemas de la base de datos */
 const Usuario = require('./models/usuarios');
 const Cesta = require('./models/cesta');
@@ -49,6 +54,8 @@ const costeProcesado = 11;
 rutasAPI.route("/insertar").post((req,res) => {
 
     const email = req.body.email;
+    let token = req.body.token;
+
     let password = '';
 
     Usuario.findOne({email}, (error, usuario) => {
@@ -61,6 +68,14 @@ rutasAPI.route("/insertar").post((req,res) => {
             });
 
         }else{
+            
+            //Si el token que se le da al nuevo usuario, coincidiera con el que ya tiene asignado otro usuario
+            //le añadimos al token otros dos tokens
+            if(usuario.token == token){
+                for (var i = 0; i <= 2; i++){
+                    token += String.fromCharCode((Math.floor((Math.random() * 100)) % 94) + 33);
+                }
+            }
             
             password = bcrypt.hash(req.body.password, costeProcesado).then((hashPassword) => {
                 console.log(hashPassword);
@@ -78,7 +93,6 @@ rutasAPI.route("/insertar").post((req,res) => {
                     usuario: usuario
                 });
             });
-            
         }
 
     });
@@ -89,7 +103,7 @@ rutasAPI.route("/insertar").post((req,res) => {
  * Cada vez que iniciamos la aplicación comrpobamos si existe un usuario con ese token
  * TODO cambiarlo a get.
  */
- rutasAPI.route("/existe-token").post((req, res) => {
+rutasAPI.route("/existe-token").post((req, res) => {
 
     const token = req.body.token;
 
@@ -192,10 +206,16 @@ rutasAPI.route("/login").post((req, res) => {
  */
 rutasAPI.route("/insertar-productos").post((req, res) => {
 
-    console.log(req.body);
+    const productoI = {
+        nombre: req.body.nombre,
+        tienda: req.body.tienda,
+        ubicacionId: req.body.ubicacionId,
+        tipoId: req.body.tipoId
+    }
+
     const nombre = req.body.nombre;
 
-    Productos.findOne({nombre}, (error, producto) => {
+    Productos.findOne({nombre}, async (error, producto) => {
 
         if(error){
             res.json({
@@ -210,7 +230,8 @@ rutasAPI.route("/insertar-productos").post((req, res) => {
                     valido: false,
                 })
             }else{
-                let nuevoProducto = new Productos(req.body);
+
+                let nuevoProducto = new Productos(productoI);
 
                 let promesaGuardado = nuevoProducto.save();
 
@@ -221,11 +242,59 @@ rutasAPI.route("/insertar-productos").post((req, res) => {
                         producto: products
                     });
                 });
+
             }
         }
 
     });
     
+});
+
+//Para subir imagen a cloudinary
+rutasAPI.route("/subirImagen/:id").put(async(req, res)  => {
+
+    const {id} = req.params;    
+    const {archivo} = req.body;
+
+    Productos.findById({_id: id}, (error, producto) => {
+
+        if(error){
+            res.json({
+                mensaje: 'Error a la hora de insertar la imagen'
+            })
+        }
+
+        if(producto !== null){
+            const nombreCortado = archivo.split('.');
+            const extension = nombreCortado[ nombreCortado.length - 1 ];
+            const nombreTemp = uuidv4() + '.' + extension;
+            const uploadPath = './images/'+ nombreTemp;
+
+            mv(archivo, uploadPath, (err) => {
+                cloudinary.uploader.upload(uploadPath,{
+                    api_key: '976349131367789', 
+                    public_id: '976349131367789',
+                    api_secret: 'emFpkAsFzLgxWEq9BorIa06K8dM', 
+                    cloud_name: 'duwkugpuj'}, (error, result) => {
+                    
+                        if(error){
+                            console.log(error);
+                        }
+            
+                        console.log(result.url);
+                        producto.imagen = result.secure_url;
+
+                        producto.save();
+
+                        res.json({
+                            mensaje: 'Insertado correctamente'
+                        })
+                });
+            });
+
+        }
+
+    });
 });
 
 /**Función para insertar ubicaciones de la casa nuevas. */
@@ -438,6 +507,9 @@ rutasAPI.route("/addTo-cesta").post((req, res) => {
     });
 });
 
+/**
+ * Función para obtener todos los pedidos a comprar solicitados por los usuarios
+ */
 rutasAPI.route("/pedidos").get((req, res) => {
 
     Cesta.find((error, pedidos) => {

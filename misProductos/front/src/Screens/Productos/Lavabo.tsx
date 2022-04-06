@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable jsx-quotes */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable semi */
@@ -17,9 +18,8 @@ const Lavabo = () => {
   }
 
   return (
-
-    <SafeAreaView>
-      {
+    <SafeAreaView style={{flex: 1}}>
+      { 
         productos.length === 0 
         ? <Text>No hay ningun producto en esta Ubicación</Text> 
         : <FlatListProduct productos={productos} categoria={categoria!} />

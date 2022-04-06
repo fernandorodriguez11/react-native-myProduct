@@ -64,12 +64,12 @@ export const AuthProvider = ( {children}: any ) => {
                 return dispatch({type: 'notAuthenticated'});
             }
 
-            //await AsyncStorage.setItem('token', respuesta.data.token);
-
             //obtengo el usuario y el token
-            dispatch({type: 'logIn', payload: {token: respuesta.data.token, user: respuesta.data.usuario, valido: respuesta.data.valido}});
-            dispatch({type: 'addRol', payload: respuesta.data.usuario.rol});
-            console.log(respuesta.data.token);
+           if(respuesta.data.token !== ''){
+                dispatch({type: 'logIn', payload: {token: respuesta.data.token, user: respuesta.data.usuario, valido: respuesta.data.valido}});
+                dispatch({type: 'addRol', payload: respuesta.data.usuario.rol});
+                console.log(respuesta.data.token);
+           }
         }
 
     };

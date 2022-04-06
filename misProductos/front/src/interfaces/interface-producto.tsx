@@ -16,6 +16,7 @@ export interface Mensaje{
     valido: boolean,
     mensaje: string,
     cesta: Cesta,
+    producto?: Producto
 }
 
 export interface ProductosEn {
