@@ -55,14 +55,14 @@ export const ProductProvider = ( {children}: any ) => {
       }, []);
 
     const obtenerCategorias = async () => {
-        const respuesta = await myProductsApi.get<UbicacionesTot>('/obtener-ubicaciones');
+        const respuesta = await myProductsApi.get<UbicacionesTot>('/ubicaciones/obtener-ubicaciones');
         setUbicaciones([
             ...respuesta.data.ubicaciones,
         ]);
     }
 
     const obtenerTipos = async () => {
-        const respuesta = await myProductsApi.get<TiposTot>('/obtener-tipos');
+        const respuesta = await myProductsApi.get<TiposTot>('/tipos/obtener-tipos');
         setTipos([
             ...respuesta.data.tipos,
         ]);
@@ -70,22 +70,33 @@ export const ProductProvider = ( {children}: any ) => {
 
     const insertarProductos = async (producto: ProductoInsert, imagenIma: ImagePickerResponse) => {
         
-        const respuesta = await myProductsApi.post<Mensaje>('/insertar-productos', producto);
+        const respuesta = await myProductsApi.post<Mensaje>('/productos/insertar-productos', producto);
 
         if (respuesta.data.valido){
             const id = respuesta.data.producto?._id;
             if (imagenIma.assets !== undefined){
 
-                /*const fileToUpload = {
+                const fileToUpload = {
                     uri: imagenIma.assets[0].uri,
                     type: imagenIma.assets[0].type,
                     name: imagenIma.assets[0].fileName,
-                }*/
-                /*
+                }
+
                 const formData = new FormData();
                 formData.append('archivo', fileToUpload);
-                */
-                const resp = await myProductsApi.put(`/subirImagen/${id}`, {archivo: producto.imagen});
+                try {
+                    await fetch(`https://my-productos.herokuapp.com/api/productos/subirImagen/${id}`, {
+                        method: 'put',
+                        headers: {
+                            'content-type': 'multipart/form-data',
+                        },
+                        body: formData,
+                    }).then((res) => {
+                        console.log(res);
+                    });
+                } catch (error){
+                    console.log(error);
+                }
 
             }
         }
@@ -93,7 +104,7 @@ export const ProductProvider = ( {children}: any ) => {
 
     const insertarPedido = async (pedido: Cesta) => {
 
-        const respuesta = await myProductsApi.post<Mensaje>('/addTo-cesta', pedido);
+        const respuesta = await myProductsApi.post<Mensaje>('/productos/addTo-cesta', pedido);
 
          setValido(respuesta.data.valido);
          setMensaje(respuesta.data.mensaje);
@@ -102,7 +113,7 @@ export const ProductProvider = ( {children}: any ) => {
 
     const obtenerCesta = async () => {
 
-        const respuesta = await myProductsApi.get<Pedidos>('/pedidos');
+        const respuesta = await myProductsApi.get<Pedidos>('/productos/pedidos');
 
         setCesta([
             ...respuesta.data.cesta,
@@ -112,13 +123,13 @@ export const ProductProvider = ( {children}: any ) => {
 
     const obtenerTodosProductos = async () => {
 
-        const respuesta = await myProductsApi.get<ProductosEn>('/todos');
+        const respuesta = await myProductsApi.get<ProductosEn>('/productos/todos');
         setTodos(respuesta.data.productos);
     }
 
     const eliminarPedido = async (id: string) => {
 
-        const respuesta = await myProductsApi.delete<Mensaje>('/eliminar-de-la-cesta/' + id);
+        const respuesta = await myProductsApi.delete<Mensaje>('/productos/eliminar-de-la-cesta/' + id);
 
         setMensaje(respuesta.data.mensaje);
 

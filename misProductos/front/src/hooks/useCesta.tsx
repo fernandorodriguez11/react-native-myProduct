@@ -13,7 +13,7 @@ const useCesta = () => {
 
   const comprarProducto = async(producto: Cesta) => {
 
-    const respuesta =  await myProductsApi.put<Mensaje>('/comprar', producto);
+    const respuesta =  await myProductsApi.put<Mensaje>('/productos/comprar', producto);
 
     setMensaje(respuesta.data.mensaje);
     setValido(respuesta.data.valido);
@@ -23,7 +23,7 @@ const useCesta = () => {
 
   const eliminarPedido = async (id: string) => {
 
-    const respuesta = await myProductsApi.delete<Mensaje>('/eliminar-de-la-cesta/' + id);
+    const respuesta = await myProductsApi.delete<Mensaje>('/productos/eliminar-de-la-cesta/' + id);
 
     setMensaje(respuesta.data.mensaje);
     setValido(respuesta.data.valido);

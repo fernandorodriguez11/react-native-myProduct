@@ -14,7 +14,7 @@ const useProductoByCategoria = (ubicacion: string) => {
 
   const obtenProductosPorCategoria = async() => {
 
-    const respuesta =  await myProductsApi.get<ProductosEn>('/productosEn/' + ubicacion);
+    const respuesta =  await myProductsApi.get<ProductosEn>('/ubicaciones/productosEn/' + ubicacion);
     setProductos([...respuesta.data.productos]);
     setCategoria(respuesta.data.ubicacion);
     setIsLoading(false);

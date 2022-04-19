@@ -12,7 +12,7 @@ const useTypeProducts = (id: TipoProducto) => {
 
   const obtenTipoProducto = async() => {
 
-    const respuesta =  await myProductsApi.get<TipoProducto>('/tipo-especifico/' + id);
+    const respuesta =  await myProductsApi.get<TipoProducto>('/tipos/tipo-especifico/' + id);
 
     setTipoProducto(respuesta.data.tipo);
     setIsLoading(false);

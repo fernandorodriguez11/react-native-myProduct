@@ -4,7 +4,7 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable semi */
 import React from 'react';
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, Text} from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import useProductoByCategoria from '../../hooks/useProductoByCategoria';
 import FlatListProduct from '../../components/FlatListProduct';
@@ -20,7 +20,12 @@ const Cocina = () => {
   return (
 
     <SafeAreaView style={{flex: 1}}>
-      <FlatListProduct productos={productos} categoria={categoria!} />
+      { 
+        productos.length === 0 
+        ? <Text>No hay ningun producto en esta Ubicación</Text> 
+        : <FlatListProduct productos={productos} categoria={categoria!} />
+      }
+      
     </SafeAreaView>
     
   );

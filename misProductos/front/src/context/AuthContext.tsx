@@ -57,7 +57,7 @@ export const AuthProvider = ( {children}: any ) => {
             
             //hago llamada a la api para comprobar que el token es el mismo.
             //TODO Hacer get
-            const respuesta = await myProductsApi.post('/existe-token', {token});
+            const respuesta = await myProductsApi.post('/usuarios/existe-token', {token});
 
             //El status 200 es que existe el usuario por lo tanto si no da ese status es un error.
             if(respuesta.status !== 200) {
@@ -68,7 +68,8 @@ export const AuthProvider = ( {children}: any ) => {
            if(respuesta.data.token !== ''){
                 dispatch({type: 'logIn', payload: {token: respuesta.data.token, user: respuesta.data.usuario, valido: respuesta.data.valido}});
                 dispatch({type: 'addRol', payload: respuesta.data.usuario.rol});
-                console.log(respuesta.data.token);
+           }else{
+                return dispatch({type: 'notAuthenticated'});
            }
         }
 
@@ -78,7 +79,7 @@ export const AuthProvider = ( {children}: any ) => {
 
         try{
 
-            const {data} = await myProductsApi.post<LoginData>('/login', {email, password});
+            const {data} = await myProductsApi.post<LoginData>('/usuarios/login', {email, password});
             
 
             if(data.usuario !== null){
@@ -99,7 +100,7 @@ export const AuthProvider = ( {children}: any ) => {
 
         try{
 
-            const {data} = await myProductsApi.post<UsuarioData>('/insertar', usuario);
+            const {data} = await myProductsApi.post<UsuarioData>('/usuarios/insertar', usuario);
             dispatch({type: 'insertUser', payload: {usuario: data.usuario, mensaje: data.mensaje}})
 
         }catch(error: any){

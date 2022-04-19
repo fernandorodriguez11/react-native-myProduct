@@ -3,7 +3,7 @@
 /* eslint-disable jsx-quotes */
 /* eslint-disable semi */
 import React from 'react';
-import { ActivityIndicator, SafeAreaView } from 'react-native';
+import { ActivityIndicator, SafeAreaView, Text } from 'react-native';
 import FlatListProduct from '../../components/FlatListProduct';
 import useProductoByCategoria from '../../hooks/useProductoByCategoria';
 
@@ -18,7 +18,11 @@ const Casa = () => {
   return (
 
     <SafeAreaView style={{flex: 1}}>
-      <FlatListProduct productos={productos} categoria={categoria!} />
+      {
+        productos.length === 0
+        ? <Text>No hay ningun producto en esta Ubicación</Text>
+        : <FlatListProduct productos={productos} categoria={categoria!} />
+      }
     </SafeAreaView>
 
   );

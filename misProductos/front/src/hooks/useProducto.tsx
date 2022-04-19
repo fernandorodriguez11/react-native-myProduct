@@ -12,7 +12,7 @@ const useProducto = (id: string) => {
 
   const obtenProductoEspecifico = async() => {
     console.log(id);
-    const respuesta = await myProductsApi.get('/productoById/' + id);
+    const respuesta = await myProductsApi.get('/productos/productoById/' + id);
     console.log(respuesta.data.productos);
     setProducto(respuesta.data.productos);
     setIsLoading(false);

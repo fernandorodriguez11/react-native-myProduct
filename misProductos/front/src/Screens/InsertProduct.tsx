@@ -15,14 +15,16 @@ import Input from '../components/Input';
 
 const InsertProduct = () => {
 
+  const {ubicaciones, tipos, insertarProductos} = useContext(ProductsContext);
+
   const {onChange, nombre, tienda, ubicacion, tipo} = useForm({
     nombre: '',
     tienda: '',
-    ubicacion: '',
-    tipo: '',
+    ubicacion: ubicaciones[0]._id,
+    tipo: tipos[0]._id,
   });
   
-  const {ubicaciones, tipos, insertarProductos} = useContext(ProductsContext);
+  
   //Para guardar la direccion de la foto temporal
   const [imagen, setImagen] = useState<string>('');
   const [imagenIma, setImagenIma] = useState<ImagePickerResponse>({});
