@@ -68,8 +68,6 @@ export const AuthProvider = ( {children}: any ) => {
            if(respuesta.data.token !== ''){
                 dispatch({type: 'logIn', payload: {token: respuesta.data.token, user: respuesta.data.usuario, valido: respuesta.data.valido}});
                 dispatch({type: 'addRol', payload: respuesta.data.usuario.rol});
-           }else{
-                return dispatch({type: 'notAuthenticated'});
            }
         }
 

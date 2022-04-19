@@ -147,5 +147,44 @@ const rutas = Router();
  
  });
 
+ rutas.route("/todosUsu").get((req, res) => {
+
+    Usuario.find((error, user) => {
+
+        if(error){
+            res.json({
+                status: res.status(400),
+                mensaje: "error",
+                valido: false,
+                error: error
+            });
+        } else {
+           
+            if(user === null){
+                
+                res.json({
+                    mensaje: "incorrecto",
+                    valido: false,
+                    usuario: null,
+                    token: null,
+                });
+
+            }else{
+                
+                res.json({
+                    mensaje: "Usuarios",
+                    valido: true,
+                    usuario: user,
+                    token: user.token,
+                });
+
+                
+            }
+        }
+
+    });
+
+});
+
 
 module.exports = rutas;
