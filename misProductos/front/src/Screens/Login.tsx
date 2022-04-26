@@ -17,6 +17,7 @@ import { useState } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { loginSt } from '../themes/loginTheme';
 import { AuthContext } from '../context/AuthContext';
+import SplashScreen from 'react-native-splash-screen';
 
 export const validate = (correo: string) => {
 
@@ -57,7 +58,9 @@ const Login = () => {
 
   const [visible, isVisible] = useState(true);
 
-  
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
 
   /**
    * Función encargada de cambiar la visibilidad del campo de la contraseña.
