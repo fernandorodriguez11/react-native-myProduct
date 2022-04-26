@@ -11,7 +11,6 @@
 import React, { useContext, useEffect } from 'react';
 import { View, Text, TextInput, Button, Keyboard, Alert } from 'react-native';
 
-
 import useForm from '../hooks/useForm';
 import { useState } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -40,6 +39,10 @@ const Login = () => {
   });
 
   useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
+  useEffect(() => {
     
     if(errorMessage.length === 0) return;
 
@@ -57,10 +60,6 @@ const Login = () => {
   }, [errorMessage]);
 
   const [visible, isVisible] = useState(true);
-
-  useEffect(() => {
-    SplashScreen.hide();
-  }, []);
 
   /**
    * Función encargada de cambiar la visibilidad del campo de la contraseña.
