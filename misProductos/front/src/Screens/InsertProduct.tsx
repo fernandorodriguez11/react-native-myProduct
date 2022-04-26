@@ -17,7 +17,7 @@ const InsertProduct = () => {
 
   const {ubicaciones, tipos, insertarProductos} = useContext(ProductsContext);
 
-  const {onChange, nombre, tienda, ubicacion, tipo} = useForm({
+  const {onChange, setFormValue, nombre, tienda, ubicacion, tipo} = useForm({
     nombre: '',
     tienda: '',
     ubicacion: ubicaciones[0]._id,
@@ -28,6 +28,7 @@ const InsertProduct = () => {
   //Para guardar la direccion de la foto temporal
   const [imagen, setImagen] = useState<string>('');
   const [imagenIma, setImagenIma] = useState<ImagePickerResponse>({});
+  const [mensaje, setMensaje] = useState<boolean>(false);
 
   const takePhoto = () => {
 
@@ -75,6 +76,7 @@ const InsertProduct = () => {
     if (imagen === ''){} else
     if (ubicacion === ''){} else
     if (tipo === ''){} else {
+
       const producto: ProductoInsert = {
         nombre,
         tienda,
@@ -85,12 +87,36 @@ const InsertProduct = () => {
   
       insertarProductos(producto, imagenIma);
 
+      setMensaje(true);
+
+      setFormValue({
+        nombre: '',
+        tienda: '',
+        ubicacion: ubicaciones[0]._id,
+        tipo: tipos[0]._id,
+      });
+
+      setTimeout(() => {
+        setMensaje(false);
+      }, 3000);
+
     }
     
   }
 
   return (
     <ScrollView style={estilos.container}>
+
+      {
+        mensaje 
+        ? (<View style={ estilos.mensajeInsercion }>
+  
+          <Text style={estilos.textoMensaje}>Producto Insertado Correctamente</Text>
+  
+        </View> )
+        : <></>
+      }
+
       <Text style={estilos.titulo}>Insertar Productos</Text>
 
       <View style={estilos.formulario}>
@@ -170,6 +196,24 @@ export const estilos = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+
+  mensajeInsercion: {
+    position: 'absolute',
+    top: 70,
+    zIndex: 2, 
+    width: '95%', 
+    height: '7%', 
+    justifyContent: 'center', 
+    backgroundColor: '#78C847',
+    marginLeft: '2.5%',
+    borderRadius: 50,
+  },
+
+  textoMensaje: {
+    textAlign: 'center', 
+    color: 'white', 
+    fontSize: 20,
   },
 
   titulo: {

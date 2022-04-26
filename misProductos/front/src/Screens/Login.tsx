@@ -10,7 +10,7 @@
 /* eslint-disable semi */
 import React, { useContext, useEffect } from 'react';
 import { View, Text, TextInput, Button, Keyboard, Alert } from 'react-native';
-import SplashScreen from 'react-native-splash-screen';
+
 
 import useForm from '../hooks/useForm';
 import { useState } from 'react';
@@ -27,8 +27,11 @@ export const validate = (correo: string) => {
 
 const Login = () => {
 
-  const {signIn, errorMessage, removeError, valido} = useContext(AuthContext);
+  const {signIn, errorMessage, removeError, valido: vali} = useContext(AuthContext);
   const [mensaje, setMensaje] = useState('');
+
+  const [valido, setValido] = useState(true);
+  const [validoEmail, setValidoEmail] = useState(true);
 
   const {email, password, onChange} = useForm({
     email: '',
@@ -54,9 +57,6 @@ const Login = () => {
 
   const [visible, isVisible] = useState(true);
 
-  useEffect(() => {
-    SplashScreen.hide();
-  }, []);
   
 
   /**
@@ -76,12 +76,22 @@ const Login = () => {
   const loginSession = () => {
 
     Keyboard.dismiss();
-    
+    console.log(vali);
     if(validate(email)){
       signIn({email, password});
+      
+      if(!vali){
+        setValido(false);
+        setValidoEmail(false);
+      }else{
+        setValido(true);
+        setValidoEmail(true);
+        
+      }
       setMensaje('');
     }else{
       setMensaje('Email invalido');
+      setValidoEmail(false);
     }
   }
 
@@ -91,7 +101,7 @@ const Login = () => {
       <Text style={loginSt.titulo} >Login To MyProducts</Text>
       
       <TextInput
-        style={valido ? loginSt.inputs : [{...loginSt.inputs, borderColor: 'red'}]}
+        style={validoEmail ? loginSt.inputs : [{...loginSt.inputs, borderColor: 'red'}]}
         autoCorrect={false}
         placeholder='Ingrese su email'
         autoCapitalize='none'

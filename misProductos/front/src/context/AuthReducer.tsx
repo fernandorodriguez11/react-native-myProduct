@@ -20,7 +20,7 @@ export interface AuthSate {
 type AuthAction =
     | {type: 'logIn', payload: {token: string, user: Usuario, valido: boolean}}
     | {type: 'insertUser' , payload: {usuario: UsuarioInsert, mensaje: string}}
-    | {type: 'addError', payload: string}
+    | {type: 'addError',  payload: {errorMessage: string, valido: boolean}}
     | {type: 'addRol', payload: string}
     | {type: 'removeError'}
     | {type: 'notAuthenticated'}
@@ -51,7 +51,8 @@ export const authReducer = (state: AuthSate, action: AuthAction): AuthSate => {
         case 'addError':
             return {
                 ...state,
-                errorMessage: action.payload,
+                errorMessage: action.payload.errorMessage,
+                valido: action.payload.valido,
                 token: null,
                 user: null,
                 status: 'not-authenticated',

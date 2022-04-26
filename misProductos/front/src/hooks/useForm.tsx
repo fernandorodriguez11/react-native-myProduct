@@ -14,10 +14,20 @@ const useForm = <T extends Object>(initialState: T) => {
         });
     }
 
+    const setFormValue = (form: T) => {
+
+        setState({
+            ...state,
+            ...form,
+        });
+
+    }
+
     return {
         ...state,
         form: state,
         onChange,
+        setFormValue,
     }
 };
 

@@ -85,7 +85,7 @@ export const AuthProvider = ( {children}: any ) => {
                 await AsyncStorage.setItem('token', data.token);
                 dispatch({type: 'addRol', payload: data.usuario.rol});
             }else{
-                dispatch({type: 'addError', payload: 'email o password no válidos'});
+                dispatch({type: 'addError', payload: {errorMessage: 'email o password no válidos', valido: false}});
             }
             
 
